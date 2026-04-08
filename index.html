@@ -551,7 +551,7 @@ const PLACE_MAP = {
   'el aliso':            { q: 'El Aliso Bar Restaurant Atahualpa Ecuador',              label: 'El Aliso Bar Restaurant' },
   'palacio del pan':     { q: 'Panaderia El Palacio del Pan Atahualpa Ecuador',         label: 'Panaderia El Palacio del Pan' },
   'bodeguita':           { q: 'La Bodeguita Campestre La Tola Atahualpa Ecuador',       label: 'La Bodeguita Campestre - La Tola' },
-  'store t.mk':          { q: 'Store TMK Atahualpa Ecuador',                            label: 'Store T.MK' },
+  'store t.mk':          { q: '0.1331256,-78.3737583',                                  label: 'Store T.MK' },
   'habaspamba':          { q: 'Atahualpa Habaspamba Pichincha Ecuador',                 label: 'Habaspamba' },
 };
 
@@ -583,10 +583,13 @@ function formatMsg(text) {
 }
 
 function getLabelFromQuery(query) {
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
+  // Busca por coordenadas exactas primero
   for (const key of Object.keys(PLACE_MAP)) {
-    if (q.includes(key)) return PLACE_MAP[key].label;
+    if (PLACE_MAP[key].q === query || q.includes(key)) return PLACE_MAP[key].label;
   }
+  // Si son coordenadas puras (números y coma), devuelve nombre genérico
+  if (/^-?[\d.]+,-?[\d.]+$/.test(q)) return 'Ubicación en el mapa';
   return query.split(',')[0];
 }
 
